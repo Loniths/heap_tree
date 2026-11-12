@@ -26,4 +26,6 @@ int heap_busca(Heap self, int buscado);
 
 void heap_print(Heap self);
 
+void heap_destroi(Heap self);
+
 #endif // HEAP_H
