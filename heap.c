@@ -67,7 +67,8 @@ void heap_print(Heap self){
     printf("\n");
 }
 
-void heap_destroi(Heap self){
-    free(self->nos);
-    free(self);
+void heap_destroi(Heap *self){
+    free(*(self)->nos);
+    free(*self);
+    *self = NULL;
 }
