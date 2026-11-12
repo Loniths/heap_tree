@@ -68,6 +68,7 @@ void heap_print(Heap self){
 }
 
 void heap_destroi(Heap *self){
+    if(self == NULL || *self == NULL) return;
     free(*(self)->nos);
     free(*self);
     *self = NULL;
