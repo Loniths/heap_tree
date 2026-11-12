@@ -1,8 +1,3 @@
-// arquivo nosso de testes
-// quando forem adicionando funções
-// vão também testando elas afinal
-// estamos codando em C
-
 #include "heap.h"
 
 #include <stdio.h>
@@ -16,6 +11,17 @@ int main(){
     heap_insere(teste, 5);
     heap_insere(teste, 30);
     heap_print(teste);
+    heap_remove(teste, NULL);
+    heap_print(teste);
+    heap_remove(teste, NULL);
+    heap_print(teste);
+    int topo;
+    printf("%d\n", heap_topo(teste, &topo));
+    printf("%d\n", topo);
+    int pos;
+    printf("%d\n", heap_busca(teste, 5, &pos));
+    printf("%d\n", pos);
+    printf("%d\n", heap_vazia(teste));
     heap_destroi(&teste);
     return 0;
 }

@@ -2,8 +2,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 #include <stdbool.h>
+
+#define CAPACIDADE_INICIAL 10
 
 struct heap{
     int n_nos;
@@ -43,9 +44,9 @@ static void sift_up(Heap self){
 bool heap_insere(Heap self, int dado){
     if(self == NULL) return false;
     if(self->n_nos == 0 && self->nos == NULL){
-        self->nos = malloc(10 * sizeof(int));
+        self->nos = malloc(CAPACIDADE_INICIAL * sizeof(int));
         if(self->nos == NULL) return false;
-        self->capacidade = 10;
+        self->capacidade = CAPACIDADE_INICIAL;
     }
     if(self->capacidade == self->n_nos){
         int *temp = realloc(self->nos, (self->capacidade * 2) * sizeof(int));
@@ -60,16 +61,89 @@ bool heap_insere(Heap self, int dado){
 }
 
 void heap_print(Heap self){
-    if(self->n_nos == 0) return;
+    if(self == NULL || self->n_nos == 0) return;
     for(int i = 0; i < self->n_nos; i++){
-        printf("%d, ", self->nos[i]);
+        if(i != 0) printf(",");
+        printf("%d ", self->nos[i]);
     }
     printf("\n");
 }
 
 void heap_destroi(Heap *self){
     if(self == NULL || *self == NULL) return;
-    free(*(self)->nos);
+    free((*self)->nos);
     free(*self);
     *self = NULL;
+}
+
+static void retorna_filhos(int pai, int *dir, int *esq){
+    *dir = (2 * pai) + 2;
+    *esq = (2 * pai) + 1;
+}
+
+static int maior_filho(Heap self, int pos){
+    int dir, esq;
+    retorna_filhos(pos, &dir, &esq);
+    if(dir >= self->n_nos){
+        if(esq >= self->n_nos) return -1;
+        return esq;
+    }
+    else if(esq >= self->n_nos) return dir;
+    else return (self->nos[dir] > self->nos[esq]) ? dir : esq;
+}
+
+static void sift_down(Heap self){
+    int pos = 0;
+    int maior = maior_filho(self, pos);
+    while(maior != -1 && self->nos[pos] < self->nos[maior]){
+        troca(&self->nos[pos], &self->nos[maior]);
+        pos = maior;
+        maior = maior_filho(self, pos);
+    }
+}
+
+bool heap_remove(Heap self, int *dado){
+    if(self == NULL || self->n_nos == 0) return false;
+    if(dado != NULL) *dado = self->nos[0];
+    self->n_nos--;
+    self->nos[0] = self->nos[self->n_nos];
+    sift_down(self);
+    if(self->n_nos <= (self->capacidade / 4)){
+        int nova_capacidade = self->capacidade / 2;
+        if(nova_capacidade >= CAPACIDADE_INICIAL){
+            int *temp = realloc(self->nos, nova_capacidade * sizeof(int));
+            if(temp != NULL){
+                self->nos = temp;
+                self->capacidade = nova_capacidade;
+            }
+        }
+    }
+    return true;
+}
+
+bool heap_topo(Heap self, int *dado){
+    if(self == NULL || self->n_nos == 0) return false;
+    if(dado != NULL) *dado = self->nos[0];
+    return true;
+}
+
+bool heap_busca(Heap self, int buscado, int *pos){
+    if(self == NULL || self->n_nos == 0) return false;
+    for(int i = 0; i < self->n_nos; i++){
+        if(self->nos[i] == buscado){
+            if(pos != NULL) *pos = i;
+            return true;
+        }
+    }
+    return false;
+}
+
+int heap_tamanho(Heap self){
+    if(self == NULL) return 0;
+    return self->n_nos;
+}
+
+bool heap_vazia(Heap self){
+    if(self == NULL) return true;
+    return self->n_nos == 0;
 }
