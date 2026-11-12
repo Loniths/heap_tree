@@ -16,6 +16,6 @@ int main(){
     heap_insere(teste, 5);
     heap_insere(teste, 30);
     heap_print(teste);
-    heap_destroi(teste);
+    heap_destroi(&teste);
     return 0;
 }
