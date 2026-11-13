@@ -63,8 +63,8 @@ bool heap_insere(Heap self, int dado){
 void heap_print(Heap self){
     if(self == NULL || self->n_nos == 0) return;
     for(int i = 0; i < self->n_nos; i++){
-        if(i != 0) printf(",");
-        printf("%d ", self->nos[i]);
+        if(i != 0) printf(", ");
+        printf("%d", self->nos[i]);
     }
     printf("\n");
 }
